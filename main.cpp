@@ -2,7 +2,10 @@
 
 #include <windows.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <time.h>
+#include <conio.h>
+
 void createFile(int amount, int type) {
 	FILE* input = fopen("in.csv", "w");
 	switch (type) {
@@ -44,16 +47,11 @@ void writeFile(int arr[], int amount) {
 	fclose(output);
 }
 
-int index = 0;
-int* arr;
-int size = 1;
-int a = 0;
-int type = 4;
 static int counter = 0;
 
-void sort(int arr[], int fst, int lst) {
+int sort(int arr[], int fst, int lst) {
 
-	index = fst;
+	int index = fst;
 	int temp;
 
 	for (int i = fst; i < lst; i++) {
@@ -72,21 +70,26 @@ void sort(int arr[], int fst, int lst) {
 	arr[lst] = arr[index];
 	arr[index] = temp;
 	counter++;
+	return index;
 }
 
 
 void quick(int arr[], int fst, int lst) {
 
+
 	if (fst >= lst)
 		return;
 
-	sort(arr, fst, lst);
+	int index = sort(arr, fst, lst);
 
 	quick(arr, fst, index - 1);
 	quick(arr, index + 1, lst);
 }
 
 void start() {
+	int type = 4;
+	int size = 1;
+	int *arr;
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
 	printf("Введите кол-во элементов: ");
@@ -94,13 +97,12 @@ void start() {
 	do {
 		printf("1 - случайный\n2 - отсортированный\n3 - в обратном порядке\nВыберите вид входного массива : ");
 		scanf("%d", &type);
-	} while (type > 3 && type > 0);
+	} while (type > 3 && type < 1);
 
 	arr = (int*)malloc(size * sizeof(int));
 
 	createFile(size, type);
 	scanFile(arr, size);
-
 
 	clock_t start = clock();
 
