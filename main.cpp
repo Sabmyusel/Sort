@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <time.h>
 void createFile(int amount, int type) {
-	FILE* input = fopen("in.txt", "w");
+	FILE* input = fopen("in.csv", "w");
 	switch (type) {
 	case 1:
 		srand(time(NULL));
@@ -26,64 +26,64 @@ void createFile(int amount, int type) {
 	fclose(input);
 }
 
-void scanFile(int mas[], int amount) {
-	FILE* input = fopen("in.txt", "r");
+void scanFile(int arr[], int amount) {
+	FILE* input = fopen("in.csv", "r");
 
 	for (int i = 0; i < amount; i++)
-		fscanf(input, "%d\n", &mas[i]);
+		fscanf(input, "%d\n", &arr[i]);
 
 	fclose(input);
 }
 
-void writeFile(int mas[], int amount) {
-	FILE* output = fopen("out.txt", "w");
+void writeFile(int arr[], int amount) {
+	FILE* output = fopen("out.csv", "w");
 
 	for (int i = 0; i < amount; i++)
-		fprintf(output, "%d\n", mas[i]);
+		fprintf(output, "%d\n", arr[i]);
 
 	fclose(output);
 }
 
 int index = 0;
-int* mas;
+int* arr;
 int size = 1;
 int a = 0;
 int type = 4;
 static int counter = 0;
 
-void sort(int mas[], int fst, int lst) {
+void sort(int arr[], int fst, int lst) {
 
 	index = fst;
 	int temp;
 
 	for (int i = fst; i < lst; i++) {
-		if (mas[i] <= mas[lst]) {
-			if (mas[i] != mas[index])
+		if (arr[i] <= arr[lst]) {
+			if (arr[i] != arr[index])
 			{
 				counter++;
-				temp = mas[i];
-				mas[i] = mas[index];
-				mas[index] = temp;
+				temp = arr[i];
+				arr[i] = arr[index];
+				arr[index] = temp;
 			}
 			index++;
 		}
 	}
-	temp = mas[lst];
-	mas[lst] = mas[index];
-	mas[index] = temp;
+	temp = arr[lst];
+	arr[lst] = arr[index];
+	arr[index] = temp;
 	counter++;
 }
 
 
-void quick(int mas[], int fst, int lst) {
+void quick(int arr[], int fst, int lst) {
 
 	if (fst >= lst)
 		return;
 
-	sort(mas, fst, lst);
+	sort(arr, fst, lst);
 
-	quick(mas, fst, index - 1);
-	quick(mas, index + 1, lst);
+	quick(arr, fst, index - 1);
+	quick(arr, index + 1, lst);
 }
 
 void start() {
@@ -96,21 +96,21 @@ void start() {
 		scanf("%d", &type);
 	} while (type > 3 && type > 0);
 
-	mas = (int*)malloc(size * sizeof(int));
+	arr = (int*)malloc(size * sizeof(int));
 
 	createFile(size, type);
-	scanFile(mas, size);
+	scanFile(arr, size);
 
 
 	clock_t start = clock();
 
-	quick(mas, 0, size - 1);
+	quick(arr, 0, size - 1);
 
 	clock_t end = clock();
 	double seconds = (double)(end - start) / CLOCKS_PER_SEC;
 
-	writeFile(mas, size);
-	free(mas);
+	writeFile(arr, size);
+	free(arr);
 	printf("Время выполнения %f секунд\nОпераций перестановок: %d\n", seconds, counter);
 
 }
